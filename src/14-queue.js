@@ -11,17 +11,42 @@
  *
  */
 
+const ListNode = require('../extensions/list-node');
+
 class Queue {
-  get size() {
-    throw new Error('Not implemented');
+  constructor() {
+    this.queue = new ListNode('head');
   }
 
-  enqueue(/* element */) {
-    throw new Error('Not implemented');
+  enqueue(element) {
+    this.queue = this.innerEnqueue(element, this.queue);
+  }
+
+  innerEnqueue(element, queue) {
+    const list = queue;
+    const newNode = new ListNode(element);
+    newNode.next = list.next;
+    list.next = newNode;
+    return list;
   }
 
   dequeue() {
-    throw new Error('Not implemented');
+    if (this.queue.next === null) throw new Error('The queue is empty, add any elemnt first!');
+    const [list, value] = this.innerDequeue(this.queue);
+    this.queue = list;
+    return value;
+  }
+
+  innerDequeue(queue) {
+    const list = queue;
+    let value;
+    if (list.next.next === null) {
+      value = list.next.value;
+      list.next = null;
+    } else {
+      [list.next, value] = this.innerDequeue(list.next);
+    }
+    return [list, value];
   }
 }
 
